@@ -1,5 +1,6 @@
 package com.meuacervo.meu_acervo.controller;
 
+import com.meuacervo.meu_acervo.exception.ColaboradorNaoEncontradoException;
 import com.meuacervo.meu_acervo.model.Colaborador;
 import com.meuacervo.meu_acervo.service.ColaboradorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,28 +25,28 @@ public class ColaboradorController {
     public ResponseEntity<Colaborador> getColaboradorByCpf(@PathVariable Integer cpf) {
         return colaboradorService.findByCpf(cpf)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ColaboradorNaoEncontradoException("Colaborador não encontrado"));
     }
 
     @GetMapping("/nome/{nome}")
     public ResponseEntity<Colaborador> getColaboradorByNome(@PathVariable String nome) {
         return colaboradorService.findByNome(nome)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ColaboradorNaoEncontradoException("Colaborador não encontrado"));
     }
 
     @GetMapping("/email/{email}")
     public ResponseEntity<Colaborador> getColaboradorByEmail(@PathVariable String email) {
         return colaboradorService.findByEmail(email)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ColaboradorNaoEncontradoException("Colaborador não encontrado"));
     }
 
     @GetMapping("/cargo/{cargo}")
     public ResponseEntity<Colaborador> getColaboradorByCargo(@PathVariable String cargo) {
         return colaboradorService.findByCargo(cargo)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ColaboradorNaoEncontradoException("Colaborador não encontrado"));
     }
 
     @PostMapping

@@ -1,5 +1,6 @@
 package com.meuacervo.meu_acervo.controller;
 
+import com.meuacervo.meu_acervo.exception.EmprestimoNaoEncontradoException;
 import com.meuacervo.meu_acervo.model.Emprestimo;
 import com.meuacervo.meu_acervo.service.EmprestimoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class EmprestimoController {
     public ResponseEntity<Emprestimo> getEmprestimoById(@PathVariable Integer id) {
         return emprestimoService.findById(id)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new EmprestimoNaoEncontradoException("Registro de emprestimo não encontrado"));
     }
 
     @PostMapping

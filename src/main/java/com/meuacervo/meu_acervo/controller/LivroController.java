@@ -1,5 +1,6 @@
 package com.meuacervo.meu_acervo.controller;
 
+import com.meuacervo.meu_acervo.exception.LivroNaoEncontradoException;
 import com.meuacervo.meu_acervo.model.Livro;
 import com.meuacervo.meu_acervo.service.LivroService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class LivroController {
 
     @GetMapping("/{isbn}")
     public ResponseEntity<Livro> getLivroById(@PathVariable Integer isbn) {
-        return livroService.findByIsbn(isbn).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        return livroService.findByIsbn(isbn).map(ResponseEntity::ok).orElseThrow(() -> new LivroNaoEncontradoException("Livro " + isbn + " não encontrado"));
     }
 
     @PostMapping

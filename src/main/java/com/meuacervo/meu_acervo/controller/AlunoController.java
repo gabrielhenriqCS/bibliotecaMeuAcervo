@@ -1,5 +1,6 @@
 package com.meuacervo.meu_acervo.controller;
 
+import com.meuacervo.meu_acervo.exception.AlunoNaoEncontradoException;
 import com.meuacervo.meu_acervo.model.Aluno;
 import com.meuacervo.meu_acervo.service.AlunoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class AlunoController {
     public ResponseEntity<Aluno> getAlunoByRa(@PathVariable Integer ra) {
         return alunoService.findByRa(ra)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new AlunoNaoEncontradoException("Aluno com RA " + ra + " não encontrado"));
     }
 
     @PostMapping
