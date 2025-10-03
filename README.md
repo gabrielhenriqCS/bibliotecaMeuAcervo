@@ -32,11 +32,11 @@ Uma API RESTful para gerenciamento de uma biblioteca de livros, incluindo alunos
 
 #### Colaboradores
 - `GET /api/v1/colaboradores` — listar todos
-- `GET /api/v1/colaboradores/cpf/{cpf}` — buscar por CPF
-- `GET /api/v1/colaboradores/nome/{nome}` — buscar por nome
+- `GET /api/v1/colaboradores/{cpf}` — buscar por CPF
+- `GET /api/v1/colaboradores/{nome}` — buscar por nome
 - `POST /api/v1/colaboradores` — criar colaborador
-- `PUT /api/v1/colaboradores/cpf/{cpf}` — atualizar colaborador
-- `DELETE /api/v1/colaboradores/cpf/{cpf}` — deletar colaborador
+- `PUT /api/v1/colaboradores/{cpf}` — atualizar colaborador
+- `DELETE /api/v1/colaboradores/{cpf}` — deletar colaborador
 
 #### Livros
 - `GET /api/v1/livros` — listar todos os livros
