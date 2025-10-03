@@ -1,13 +1,17 @@
 package com.meuacervo.meu_acervo.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.Instant;
 
 @Entity
 @Table(name = "livro")
 public class Livro {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer isbn;
+    @Column(name = "isbn_livro", nullable = false)
+    private String isbn;
 
     @Column(name = "nome", length = 80, nullable = false)
     private String nome;
@@ -18,22 +22,31 @@ public class Livro {
     @Column(name = "paginas")
     private Integer paginas;
 
-    public Livro(Integer isbn, String nome, String autor, Integer paginas) {
+    @CreationTimestamp
+    private Instant creationTimestamp;
+
+    @UpdateTimestamp
+    private Instant updateTimestamp;
+
+    public Livro(String isbn, String nome, String autor, Integer paginas, Instant creationTimestamp, Instant updateTimestamp) {
         this.isbn = isbn;
         this.nome = nome;
         this.autor = autor;
         this.paginas = paginas;
+        this.creationTimestamp = creationTimestamp;
+        this.updateTimestamp = updateTimestamp;
     }
 
     public Livro() {
 
     }
 
-    public Integer getIsbn() {
+
+    public String getIsbn() {
         return isbn;
     }
 
-    public void setIsbn(Integer isbn) {
+    public void setIsbn(String isbn) {
         this.isbn = isbn;
     }
 
@@ -59,5 +72,21 @@ public class Livro {
 
     public void setPaginas(Integer paginas) {
         this.paginas = paginas;
+    }
+
+    public Instant getCreationTimestamp() {
+        return creationTimestamp;
+    }
+
+    public void setCreationTimestamp(Instant creationTimestamp) {
+        this.creationTimestamp = creationTimestamp;
+    }
+
+    public Instant getUpdateTimestamp() {
+        return updateTimestamp;
+    }
+
+    public void setUpdateTimestamp(Instant updateTimestamp) {
+        this.updateTimestamp = updateTimestamp;
     }
 }

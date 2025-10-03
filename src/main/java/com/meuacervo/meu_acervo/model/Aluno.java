@@ -3,14 +3,16 @@ package com.meuacervo.meu_acervo.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-@Getter
-@Setter
+import java.time.Instant;
+
 @Entity
 @Table(name = "aluno")
 public class Aluno {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ra_aluno", nullable = false)
     private Integer ra;
 
     @Column(name = "nome", length = 65, nullable = false)
@@ -26,12 +28,17 @@ public class Aluno {
     @JoinColumn(name = "emprestimo_id")
     private Emprestimo emprestimoId;
 
-    public Aluno(Integer ra, String nome, String email, Integer telefone) {
+    @CreationTimestamp
+    private Instant creationTimestamp;
+
+    @UpdateTimestamp
+    private Instant updateTimestamp;
+
+    public Aluno(Integer ra, String nome, String email, Integer telefone, Emprestimo emprestimo, Instant now, Object o) {
         this.ra = ra;
         this.nome = nome;
         this.email = email;
         this.telefone = telefone;
-
     }
 
     public Aluno() {

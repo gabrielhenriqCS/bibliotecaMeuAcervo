@@ -1,5 +1,6 @@
 package com.meuacervo.meu_acervo.controller;
 
+import com.meuacervo.meu_acervo.DTOs.CreateColaboradorDTO;
 import com.meuacervo.meu_acervo.exception.ColaboradorNaoEncontradoException;
 import com.meuacervo.meu_acervo.model.Colaborador;
 import com.meuacervo.meu_acervo.service.ColaboradorService;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -17,61 +19,27 @@ public class ColaboradorController {
     private ColaboradorService colaboradorService;
 
     @GetMapping
-    public List<Colaborador> getAllColaboradores() {
-        return colaboradorService.findAll();
+    public ResponseEntity<List<Colaborador>> getAllColaboradores() {
+        var listColaborador = colaboradorService.listColaboradores();
+        return ResponseEntity.ok(listColaborador);
     }
 
-    @GetMapping("/cpf/{cpf}")
+    @GetMapping("/{cpf}")
     public ResponseEntity<Colaborador> getColaboradorByCpf(@PathVariable Integer cpf) {
-        return colaboradorService.findByCpf(cpf)
-                .map(ResponseEntity::ok)
-                .orElseThrow(() -> new ColaboradorNaoEncontradoException("Colaborador não encontrado"));
-    }
-
-    @GetMapping("/nome/{nome}")
-    public ResponseEntity<Colaborador> getColaboradorByNome(@PathVariable String nome) {
-        return colaboradorService.findByNome(nome)
-                .map(ResponseEntity::ok)
-                .orElseThrow(() -> new ColaboradorNaoEncontradoException("Colaborador não encontrado"));
-    }
-
-    @GetMapping("/email/{email}")
-    public ResponseEntity<Colaborador> getColaboradorByEmail(@PathVariable String email) {
-        return colaboradorService.findByEmail(email)
-                .map(ResponseEntity::ok)
-                .orElseThrow(() -> new ColaboradorNaoEncontradoException("Colaborador não encontrado"));
-    }
-
-    @GetMapping("/cargo/{cargo}")
-    public ResponseEntity<Colaborador> getColaboradorByCargo(@PathVariable String cargo) {
-        return colaboradorService.findByCargo(cargo)
+        return colaboradorService.findColaboradorByCpf(cpf)
                 .map(ResponseEntity::ok)
                 .orElseThrow(() -> new ColaboradorNaoEncontradoException("Colaborador não encontrado"));
     }
 
     @PostMapping
-    public Colaborador createColaborador(@RequestBody Colaborador colaborador) {
-        return colaboradorService.save(colaborador);
+    public ResponseEntity<Colaborador> createColaborador(@RequestBody CreateColaboradorDTO createColaboradorDTO) {
+        var colaboradorId = colaboradorService.createColaborador(createColaboradorDTO);
+        return ResponseEntity.created(URI.create("api/v1/colaboradores/" + colaboradorId.toString())).build();
     }
 
-    @PutMapping("/cpf/{cpf}")
-    public ResponseEntity<Colaborador> updateColaborador(@PathVariable Integer cpf,
-                                                         @RequestBody Colaborador colaboradorDetalhes) {
-        return colaboradorService.findByCpf(cpf).map(colaboradorExist -> {
-            colaboradorExist.setNome(colaboradorDetalhes.getNome());
-            colaboradorExist.setEmail(colaboradorDetalhes.getEmail());
-            colaboradorExist.setCargo(colaboradorDetalhes.getCargo());
-            Colaborador atualizado = colaboradorService.save(colaboradorExist);
-            return ResponseEntity.ok(atualizado);
-        }).orElse(ResponseEntity.notFound().build());
-    }
-
-    @DeleteMapping("/cpf/{cpf}")
+    @DeleteMapping("/{cpf}")
     public ResponseEntity<Void> deleteByCpf(@PathVariable Integer cpf) {
-        if (colaboradorService.findByCpf(cpf).isPresent()) {
-            colaboradorService.deleteById(cpf);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+        colaboradorService.deleteByCpf(cpf);
+        return ResponseEntity.noContent().build();
     }
 }

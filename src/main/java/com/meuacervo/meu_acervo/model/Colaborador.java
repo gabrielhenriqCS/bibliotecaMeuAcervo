@@ -1,12 +1,16 @@
 package com.meuacervo.meu_acervo.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.Instant;
 
 @Entity
 @Table(name = "colaborador")
 public class Colaborador {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "cpf_colaborador", nullable = false)
     private Integer cpf;
 
     @Column(name = "nome", length = 75, nullable = false)
@@ -18,11 +22,19 @@ public class Colaborador {
     @Column(name = "cargo", length = 60, nullable = false)
     private String cargo;
 
-    public Colaborador(Integer cpf, String nome, String email, String cargo) {
+    @CreationTimestamp
+    private Instant creationTimestamp;
+
+    @UpdateTimestamp
+    private Instant updateTimestamp;
+
+    public Colaborador(Integer cpf, String nome, String email, String cargo, Instant creationTimestamp, Instant updateTimestamp) {
         this.cpf = cpf;
         this.nome = nome;
         this.email = email;
         this.cargo = cargo;
+        this.creationTimestamp = creationTimestamp;
+        this.updateTimestamp = updateTimestamp;
     }
 
     public Colaborador() {
@@ -59,5 +71,21 @@ public class Colaborador {
 
     public void setCargo(String cargo) {
         this.cargo = cargo;
+    }
+
+    public Instant getCreationTimestamp() {
+        return creationTimestamp;
+    }
+
+    public void setCreationTimestamp(Instant creationTimestamp) {
+        this.creationTimestamp = creationTimestamp;
+    }
+
+    public Instant getUpdateTimestamp() {
+        return updateTimestamp;
+    }
+
+    public void setUpdateTimestamp(Instant updateTimestamp) {
+        this.updateTimestamp = updateTimestamp;
     }
 }

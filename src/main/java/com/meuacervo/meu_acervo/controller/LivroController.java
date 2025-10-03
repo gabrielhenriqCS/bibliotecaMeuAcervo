@@ -1,5 +1,6 @@
 package com.meuacervo.meu_acervo.controller;
 
+import com.meuacervo.meu_acervo.DTOs.CreateLivroDTO;
 import com.meuacervo.meu_acervo.exception.LivroNaoEncontradoException;
 import com.meuacervo.meu_acervo.model.Livro;
 import com.meuacervo.meu_acervo.service.LivroService;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -16,38 +18,26 @@ public class LivroController {
     private LivroService livroService;
 
     @GetMapping
-    public List<Livro> getAllLivros() {
-        return livroService.findAll();
+    public ResponseEntity<List<Livro>> getAllLivros() {
+        var listLivros = livroService.listLivros();
+        return ResponseEntity.ok(listLivros);
     }
 
     @GetMapping("/{isbn}")
-    public ResponseEntity<Livro> getLivroById(@PathVariable Integer isbn) {
-        return livroService.findByIsbn(isbn).map(ResponseEntity::ok).orElseThrow(() -> new LivroNaoEncontradoException("Livro " + isbn + " não encontrado"));
+    public ResponseEntity<Livro> getLivroById(@PathVariable("isbn") String isbn) {
+        return livroService.findLivroByIsbn(isbn).map(ResponseEntity::ok).orElseThrow(() -> new LivroNaoEncontradoException("ISBN " + isbn + " não encontrado"));
     }
 
     @PostMapping
-    public Livro createLivro(@RequestBody Livro livro) {
-        return livroService.save(livro);
+    public ResponseEntity<Livro> createLivro(@RequestBody CreateLivroDTO createLivroDTO) {
+        var livroId = livroService.createLivro(createLivroDTO);
+        return ResponseEntity.created(URI.create("/api/v1/livros/" + livroId)).build();
     }
 
-    @PutMapping("/{isbn}")
-    public ResponseEntity<Livro> updateLivro(@PathVariable Integer isbn, @RequestBody Livro livroDetalhes) {
-        return livroService.findByIsbn(isbn)
-                .map(livroExiste -> {
-                    livroExiste.setNome(livroDetalhes.getNome());
-                    livroExiste.setAutor(livroDetalhes.getAutor());
-                    livroExiste.setPaginas(livroDetalhes.getPaginas());
-                    Livro atualizado = livroService.save(livroExiste);
-                    return ResponseEntity.ok(atualizado);
-                }).orElse(ResponseEntity.notFound().build());
-    }
 
     @DeleteMapping("/{isbn}")
-    public ResponseEntity<Livro> deleteLivro(@PathVariable Integer isbn) {
-        if (livroService.findByIsbn(isbn).isPresent()) {
-            livroService.deleteById(isbn);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<Void> deleteLivro(@PathVariable("isbn") String isbn) {
+        livroService.deleteById(isbn);
+        return ResponseEntity.noContent().build();
     }
 }
