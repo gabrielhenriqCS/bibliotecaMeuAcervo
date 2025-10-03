@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface AlunoRepository extends JpaRepository<Aluno, Integer> {
+public interface AlunoRepository extends JpaRepository<Aluno, Long> {
 }

@@ -1,6 +1,7 @@
 package com.meuacervo.meu_acervo.controller;
 
 import com.meuacervo.meu_acervo.DTOs.CreateAlunoDTO;
+import com.meuacervo.meu_acervo.DTOs.UpdateAlunoDTO;
 import com.meuacervo.meu_acervo.exception.AlunoNaoEncontradoException;
 import com.meuacervo.meu_acervo.model.Aluno;
 import com.meuacervo.meu_acervo.service.AlunoService;
@@ -23,7 +24,7 @@ public class AlunoController {
     }
 
     @GetMapping("/{ra}")
-    public ResponseEntity<Aluno> getAlunoByRa(@PathVariable("ra") Integer ra) {
+    public ResponseEntity<Aluno> getAlunoByRa(@PathVariable("ra") Long ra) {
         return alunoService.findAlunoByRa(ra)
                 .map(ResponseEntity::ok)
                 .orElseThrow(() -> new AlunoNaoEncontradoException("Aluno com RA " + ra + " não encontrado"));
@@ -35,8 +36,14 @@ public class AlunoController {
         return ResponseEntity.created(URI.create("/api/v1/alunos/" + alunoId)).build();
     }
 
+    @PutMapping("/{ra}")
+    public ResponseEntity<Void> updateAluno(@PathVariable("ra") Long ra, UpdateAlunoDTO updateAlunoDTO) {
+        alunoService.updateAlunoByRa(ra, updateAlunoDTO);
+        return ResponseEntity.noContent().build();
+    }
+
     @DeleteMapping("/{ra}")
-    public ResponseEntity<Void> deleteAluno(@PathVariable("ra") Integer ra) {
+    public ResponseEntity<Void> deleteAluno(@PathVariable("ra") Long ra) {
         alunoService.deleteByRa(ra);
         return ResponseEntity.noContent().build();
     }

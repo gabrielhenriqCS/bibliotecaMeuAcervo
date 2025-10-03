@@ -1,6 +1,7 @@
 package com.meuacervo.meu_acervo.controller;
 
 import com.meuacervo.meu_acervo.DTOs.CreateColaboradorDTO;
+import com.meuacervo.meu_acervo.DTOs.UpdateColaboradorDTO;
 import com.meuacervo.meu_acervo.exception.ColaboradorNaoEncontradoException;
 import com.meuacervo.meu_acervo.model.Colaborador;
 import com.meuacervo.meu_acervo.service.ColaboradorService;
@@ -34,7 +35,13 @@ public class ColaboradorController {
     @PostMapping
     public ResponseEntity<Colaborador> createColaborador(@RequestBody CreateColaboradorDTO createColaboradorDTO) {
         var colaboradorId = colaboradorService.createColaborador(createColaboradorDTO);
-        return ResponseEntity.created(URI.create("api/v1/colaboradores/" + colaboradorId.toString())).build();
+        return ResponseEntity.created(URI.create("/api/v1/colaboradores/" + colaboradorId.toString())).build();
+    }
+
+    @PutMapping("/{cpf}")
+    public ResponseEntity<Void> updateColaborador(@PathVariable("cpf") Integer cpf, UpdateColaboradorDTO updateColaboradorDTO) {
+        colaboradorService.updateColaboradorByCpf(cpf, updateColaboradorDTO);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{cpf}")

@@ -1,6 +1,7 @@
 package com.meuacervo.meu_acervo.service;
 
 import com.meuacervo.meu_acervo.DTOs.CreateLivroDTO;
+import com.meuacervo.meu_acervo.DTOs.UpdateLivroDTO;
 import com.meuacervo.meu_acervo.model.Livro;
 import com.meuacervo.meu_acervo.repository.LivroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,14 +16,12 @@ public class LivroService {
     @Autowired
     private LivroRepository livroRepository;
 
-    public String createLivro(CreateLivroDTO createLivroDTO) {
-        var entity = new Livro(
-                createLivroDTO.isbn().toString(),
-                createLivroDTO.nome(),
-                createLivroDTO.autor(),
-                createLivroDTO.paginas(),
-                Instant.now(),
-                null);
+    public String createLivro(CreateLivroDTO dto) {
+        var entity = new Livro();
+        entity.setIsbn(dto.isbn());
+        entity.setNome(dto.nome());
+        entity.setAutor(dto.autor());
+        entity.setPaginas(dto.paginas());
 
         var livroSaved = livroRepository.save(entity);
 
@@ -35,6 +34,21 @@ public class LivroService {
 
     public List<Livro> listLivros() {
         return livroRepository.findAll();
+    }
+
+    public void updateLivroByIsbn(String isbn, UpdateLivroDTO updateLivroDTO) {
+        var livroEntity = livroRepository.findById(isbn);
+        if (livroEntity.isPresent()) {
+            var livro = livroEntity.get();
+            if (updateLivroDTO.nome() != null) {
+                livro.setNome(updateLivroDTO.nome());
+            }
+
+            if (updateLivroDTO.paginas() != null) {
+                livro.setPaginas(updateLivroDTO.paginas());
+            }
+            livroRepository.save(livro);
+        }
     }
 
     public void deleteById(String isbn) {

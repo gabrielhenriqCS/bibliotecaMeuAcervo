@@ -1,6 +1,7 @@
 package com.meuacervo.meu_acervo.controller;
 
 import com.meuacervo.meu_acervo.DTOs.CreateLivroDTO;
+import com.meuacervo.meu_acervo.DTOs.UpdateLivroDTO;
 import com.meuacervo.meu_acervo.exception.LivroNaoEncontradoException;
 import com.meuacervo.meu_acervo.model.Livro;
 import com.meuacervo.meu_acervo.service.LivroService;
@@ -32,6 +33,12 @@ public class LivroController {
     public ResponseEntity<Livro> createLivro(@RequestBody CreateLivroDTO createLivroDTO) {
         var livroId = livroService.createLivro(createLivroDTO);
         return ResponseEntity.created(URI.create("/api/v1/livros/" + livroId)).build();
+    }
+
+    @PutMapping("/{isbn}")
+    public ResponseEntity<Void> updateLivroById(@PathVariable("isbn") String isbn, @RequestBody UpdateLivroDTO updateLivroDTO) {
+        livroService.updateLivroByIsbn(isbn, updateLivroDTO);
+        return ResponseEntity.noContent().build();
     }
 
 

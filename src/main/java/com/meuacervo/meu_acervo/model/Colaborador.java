@@ -7,7 +7,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.Instant;
 
 @Entity
-@Table(name = "colaborador")
+@Table(name = "colaboradorId")
 public class Colaborador {
     @Id
     @Column(name = "cpf_colaborador", nullable = false)

@@ -12,7 +12,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/emprestimos")
+@RequestMapping("/api/v1/emprestimos")
 public class EmprestimoController {
 
     @Autowired

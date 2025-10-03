@@ -1,8 +1,6 @@
 package com.meuacervo.meu_acervo.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -13,7 +11,7 @@ import java.time.Instant;
 public class Aluno {
     @Id
     @Column(name = "ra_aluno", nullable = false)
-    private Integer ra;
+    private Long ra;
 
     @Column(name = "nome", length = 65, nullable = false)
     private String nome;
@@ -22,7 +20,7 @@ public class Aluno {
     private String email;
 
     @Column(name = "telefone")
-    private Integer telefone;
+    private Long telefone;
 
     @ManyToOne
     @JoinColumn(name = "emprestimo_id")
@@ -34,22 +32,23 @@ public class Aluno {
     @UpdateTimestamp
     private Instant updateTimestamp;
 
-    public Aluno(Integer ra, String nome, String email, Integer telefone, Emprestimo emprestimo, Instant now, Object o) {
+    public Aluno(Long ra, String nome, String email, Long telefone, Emprestimo emprestimoId, Instant creationTimestamp, Instant updateTimestamp) {
         this.ra = ra;
         this.nome = nome;
         this.email = email;
         this.telefone = telefone;
+        this.emprestimoId = emprestimoId;
     }
 
     public Aluno() {
 
     }
 
-    public Integer getRa() {
+    public Long getRa() {
         return ra;
     }
 
-    public void setRa(Integer ra) {
+    public void setRa(Long ra) {
         this.ra = ra;
     }
 
@@ -69,11 +68,19 @@ public class Aluno {
         this.email = email;
     }
 
-    public Integer getTelefone() {
+    public Long getTelefone() {
         return telefone;
     }
 
-    public void setTelefone(Integer telefone) {
+    public void setTelefone(Long telefone) {
         this.telefone = telefone;
+    }
+
+    public Emprestimo getEmprestimoId() {
+        return emprestimoId;
+    }
+
+    public void setEmprestimoId(Emprestimo emprestimoId) {
+        this.emprestimoId = emprestimoId;
     }
 }
