@@ -1,7 +1,5 @@
 package com.meuacervo.meu_acervo.exception;
 
-import java.time.LocalDateTime;
-
 public class ErrorResponse {
     private int status;
     private String message;
