@@ -1,103 +1,121 @@
-# Meu Acervo Biblioteca API
+# 📚 Meu Acervo - API de Gestão Bibliotecária
 
-Uma API REST sobre uma biblioteca chamada Meu Acervo, onde é possível fazer cadastro dos livros, alunos e colaboradores. Além de registrar empréstimos. 
+[![Java](https://img.shields.io/badge/Java-21-orange?style=for-the-badge&logo=openjdk)](https://www.oracle.com/java/)
+[![Spring](https://img.shields.io/badge/Spring_Boot-3.5-6DB33F?style=for-the-badge&logo=spring)](https://spring.io/)
+[![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED?style=for-the-badge&logo=docker)](https://www.docker.com/)
+[![MySQL](https://img.shields.io/badge/MySQL-Persistência-4479A1?style=for-the-badge&logo=mysql)](https://www.mysql.com/)
 
-## Tecnologias
+API REST robusta para o gerenciamento completo de bibliotecas, permitindo o controle de acervo, usuários (alunos/colaboradores) e o fluxo crítico de empréstimos.
 
-- Java 21
-- Spring Boot 3.5
-- Maven
-- MySQL
-- Docker & Docker Compose
-- Lombok
+## 🚀 Diferenciais de Engenharia
 
-## O que foi feito?
+Diferente de CRUDs simples, este projeto foi construído com foco em **Clean Code** e **Resiliência**:
 
-- CRUD de **Alunos**
-- CRUD de **Colaboradores**
-- CRUD de **Livros**
-- CRUD de **Empréstimos**
-- Relacionamento entre alunos, colaboradores e livros
+* **Global Exception Handling:** Tratamento centralizado de erros com `@RestControllerAdvice`, garantindo que a API nunca retorne um erro genérico (500), mas sim mensagens claras com status HTTP apropriados.
+* **Service Layer Pattern:** Lógica de negócio 100% isolada dos Controllers, facilitando a manutenção e futuros testes unitários.
+* **Data Integrity:** Implementação de DTOs (Data Transfer Objects) para proteger a integridade das entidades do banco de dados.
+* **Contêinerização Profissional:** Ambiente de desenvolvimento isolado com Docker Compose, garantindo que o banco de dados MySQL suba com as configurações corretas automaticamente.
 
-## Estrutura da API
+## 🛠️ Tecnologias
 
-### Endpoints principais:
+* **Linguagem:** Java 21
+* **Framework:** Spring Boot 3.5 (Web, Data JPA, Validation)
+* **Gerenciador de Dependências:** Maven
+* **Banco de Dados:** MySQL
+* **Infra:** Docker & Docker Compose
+* **Utilitários:** Lombok & MapStruct (DTO Mapping)
 
-#### Alunos
-- `GET /api/v1/alunos` — listar todos os alunos
-- `GET /api/v1/alunos/{ra}` — obter aluno por RA
-  - `POST /api/v1/alunos` — criar novo aluno
-`{
-   "ra": 202401,
-   "nome": "Maria Santos",
-   "email": "maria@aluno.edu",
-   "telefone": 11999887766,
-   "emprestimoId": null
-}`
-- `PUT /api/v1/alunos/{ra}` — atualizar aluno
-- `DELETE /api/v1/alunos/{ra}` — deletar aluno
+---
 
-#### Colaboradores
-- `GET /api/v1/colaboradores` — listar todos
-- `GET /api/v1/colaboradores/{cpf}` — buscar por CPF
-- `GET /api/v1/colaboradores/{nome}` — buscar por nome
-- `POST /api/v1/colaboradores` — criar colaborador
-`{
-   "cpf": 12345678,
-   "nome": "João Silva",
-   "email": "joao@email.com",
-   "cargo": "Bibliotecário"
-}`
-- `PUT /api/v1/colaboradores/{cpf}` — atualizar colaborador
-- `DELETE /api/v1/colaboradores/{cpf}` — deletar colaborador
+## 📡 Estrutura da API (Endpoints)
 
-#### Livros
-- `GET /api/v1/livros` — listar todos os livros
-- `GET /api/v1/livros/{isbn}` — buscar livro por ISBN
-- `POST /api/v1/livros` — criar livro
-`{
-   "isbn": "158-3-16-584391-6",
-   "nome": "Harry Potter",
-   "autor": "J. K. Rowling",
-   "paginas": 250
-}`
-- `PUT /api/v1/livros/{isbn}` — atualizar livro
-- `DELETE /api/v1/livros/{isbn}` — deletar livro
+### 👥 Alunos & Colaboradores
+| Método | Endpoint | Descrição |
+| :--- | :--- | :--- |
+| `GET` | `/api/v1/alunos` | Lista todos os alunos cadastrados |
+| `POST` | `/api/v1/alunos` | Cria um novo aluno (RA único) |
+| `GET` | `/api/v1/colaboradores/{cpf}` | Busca colaborador por CPF |
+| `DELETE` | `/api/v1/colaboradores/{cpf}` | Remove um colaborador do sistema |
 
-#### Empréstimos
-- `GET /api/emprestimos` — listar todos os empréstimos
-- `GET /api/emprestimos/{id}` — buscar empréstimo por ID
-- `POST /api/emprestimos` — registrar novo empréstimo
-`{
-    "id": null,
-    "dataEmprestimo": "2024-10-03T10:00:00",
-    "dataDevolucao": "2024-10-17T10:00:00",
-    "livro": {
-        "isbn": "978-3-16-148410-0",
-        "nome": "Clean Code",
-        "autor": "Robert Martin",
-        "paginas": 464,
-        "creationTimestamp": null,
-        "updateTimestamp": null
-    },
-    "colaborador": {
-        "cpf": 12345678,
-        "nome": "João Silva",
-        "email": "joao@biblioteca.com",
-        "cargo": "Bibliotecário",
-        "creationTimestamp": null,
-        "updateTimestamp": null
-    }
-}`
-- `PUT /api/emprestimos/{id}` — atualizar devolução
-- `DELETE /api/emprestimos/{id}` — deletar empréstimo
+### 📖 Livros & Empréstimos
+| Método | Endpoint | Descrição |
+| :--- | :--- | :--- |
+| `POST` | `/api/v1/livros` | Registra novo título no acervo (ISBN) |
+| `GET` | `/api/v1/livros/{isbn}` | Detalhes de um livro específico |
+| `POST` | `/api/emprestimos` | Registra a saída de um livro |
+| `PUT` | `/api/emprestimos/{id}` | Atualiza status/data de devolução |
 
-## Rodando o projeto
+---
 
-### 1. Com Docker Compose
+## 📦 Exemplo de Uso (Payload)
 
-Certifique-se de ter Docker e Docker Compose instalados.  
-Inicie o banco de dados MySQL:
+### Criar Novo Empréstimo
+`POST /api/emprestimos`
+```json
+{
+    "dataEmprestimo": "2026-03-02T10:00:00",
+    "dataDevolucao": "2026-03-16T10:00:00",
+    "isbnLivro": "978-3-16-148410-0",
+    "cpfColaborador": 12345678,
+    "raAluno": 202401
+}# 📚 Meu Acervo - API de Gestão Bibliotecária
 
-```bash
-docker-compose up -d
+[![Java](https://img.shields.io/badge/Java-21-orange?style=for-the-badge&logo=openjdk)](https://www.oracle.com/java/)
+[![Spring](https://img.shields.io/badge/Spring_Boot-3.5-6DB33F?style=for-the-badge&logo=spring)](https://spring.io/)
+[![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED?style=for-the-badge&logo=docker)](https://www.docker.com/)
+[![MySQL](https://img.shields.io/badge/MySQL-Persistência-4479A1?style=for-the-badge&logo=mysql)](https://www.mysql.com/)
+
+API REST robusta para o gerenciamento completo de bibliotecas, permitindo o controle de acervo, usuários (alunos/colaboradores) e o fluxo crítico de empréstimos.
+
+## 🚀 Diferenciais de Engenharia
+
+Diferente de CRUDs simples, este projeto foi construído com foco em **Clean Code** e **Resiliência**:
+
+* **Global Exception Handling:** Tratamento centralizado de erros com `@RestControllerAdvice`, garantindo que a API nunca retorne um erro genérico (500), mas sim mensagens claras com status HTTP apropriados.
+* **Service Layer Pattern:** Lógica de negócio 100% isolada dos Controllers, facilitando a manutenção e futuros testes unitários.
+* **Data Integrity:** Implementação de DTOs (Data Transfer Objects) para proteger a integridade das entidades do banco de dados.
+* **Contêinerização Profissional:** Ambiente de desenvolvimento isolado com Docker Compose, garantindo que o banco de dados MySQL suba com as configurações corretas automaticamente.
+
+## 🛠️ Tecnologias
+
+* **Linguagem:** Java 21
+* **Framework:** Spring Boot 3.5 (Web, Data JPA, Validation)
+* **Gerenciador de Dependências:** Maven
+* **Banco de Dados:** MySQL
+* **Infra:** Docker & Docker Compose
+* **Utilitários:** Lombok & MapStruct (DTO Mapping)
+
+---
+
+## 📡 Estrutura da API (Endpoints)
+
+### 👥 Alunos & Colaboradores
+| Método | Endpoint | Descrição |
+| :--- | :--- | :--- |
+| `GET` | `/api/v1/alunos` | Lista todos os alunos cadastrados |
+| `POST` | `/api/v1/alunos` | Cria um novo aluno (RA único) |
+| `GET` | `/api/v1/colaboradores/{cpf}` | Busca colaborador por CPF |
+| `DELETE` | `/api/v1/colaboradores/{cpf}` | Remove um colaborador do sistema |
+
+### 📖 Livros & Empréstimos
+| Método | Endpoint | Descrição |
+| :--- | :--- | :--- |
+| `POST` | `/api/v1/livros` | Registra novo título no acervo (ISBN) |
+| `GET` | `/api/v1/livros/{isbn}` | Detalhes de um livro específico |
+| `POST` | `/api/emprestimos` | Registra a saída de um livro |
+| `PUT` | `/api/emprestimos/{id}` | Atualiza status/data de devolução |
+
+---
+
+## 📦 Exemplo de Uso (Payload)
+
+### Criar Novo Empréstimo
+`POST /api/emprestimos`
+```json
+{
+    "dataEmprestimo": "2026-03-02T10:00:00",
+    "dataDevolucao": "2026-03-16T10:00:00",
+    "isbnLivro": "978-3-16-148410-0",
+    "cpfColaborador": 12345678,
+    "raAluno": 202401
+}
