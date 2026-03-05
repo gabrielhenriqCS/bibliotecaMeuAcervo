@@ -2,21 +2,20 @@ package com.meuacervo.meu_acervo.service;
 
 import com.meuacervo.meu_acervo.DTOs.CreateColaboradorDTO;
 import com.meuacervo.meu_acervo.DTOs.UpdateColaboradorDTO;
+import com.meuacervo.meu_acervo.exception.ColaboradorNaoEncontradoException;
 import com.meuacervo.meu_acervo.model.Colaborador;
 import com.meuacervo.meu_acervo.repository.ColaboradorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ColaboradorService {
     @Autowired
     private ColaboradorRepository colaboradorRepository;
 
-    public Integer createColaborador(CreateColaboradorDTO dto) {
+    public Integer cadastrarColaborador(CreateColaboradorDTO dto) {
         var entity = new Colaborador();
         entity.setCpf(dto.cpf());
         entity.setNome(dto.nome());
@@ -26,7 +25,7 @@ public class ColaboradorService {
         return colaboradorSaved.getCpf();
     }
 
-    public void updateColaboradorByCpf(Integer cpf, UpdateColaboradorDTO updateColaboradorDTO) {
+    public void atualizarColaboradorPeloCpf(Integer cpf, UpdateColaboradorDTO updateColaboradorDTO) {
         var colaboradorEntity = colaboradorRepository.findById(cpf);
         if (colaboradorEntity.isPresent()) {
             var colaborador = colaboradorEntity.get();
@@ -41,15 +40,15 @@ public class ColaboradorService {
         }
     }
 
-    public Optional<Colaborador> findColaboradorByCpf(Integer cpf) {
-        return colaboradorRepository.findById(cpf);
+    public Colaborador buscarColaboradorPeloCpf(Integer cpf) {
+        return colaboradorRepository.findById(cpf).orElseThrow(() -> new ColaboradorNaoEncontradoException("Colaborador com CPF " + cpf + " não enconttrado"));
     }
 
-    public List<Colaborador> listColaboradores() {
+    public List<Colaborador> listarColaboradores() {
         return colaboradorRepository.findAll();
     }
 
-    public void deleteByCpf(Integer cpf) {
+    public void deletarPeloCpf(Integer cpf) {
         colaboradorRepository.deleteById(cpf);
     }
 }

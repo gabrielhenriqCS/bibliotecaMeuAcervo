@@ -2,30 +2,29 @@ package com.meuacervo.meu_acervo.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(AlunoNaoEncontradoException.class)
-    public ResponseEntity<ErrorResponse> handlerAlunoNaoEncontrado(AlunoNaoEncontradoException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(404, ex.getMessage()));
+    public ResponseEntity<String> handlerAlunoNaoEncontrado(RuntimeException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(LivroNaoEncontradoException.class)
-    public ResponseEntity<ErrorResponse> handlerLivroNaoEncontrado(LivroNaoEncontradoException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(404, ex.getMessage()));
+    public ResponseEntity<String> handlerLivroNaoEncontrado(RuntimeException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ColaboradorNaoEncontradoException.class)
-    public ResponseEntity<ErrorResponse> handlerColaboradorNaoEncontrado(ColaboradorNaoEncontradoException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(404, ex.getMessage()));
+    public ResponseEntity<String> handlerColaboradorNaoEncontrado(RuntimeException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(EmprestimoNaoEncontradoException.class)
-    public ResponseEntity<ErrorResponse> handlerEmprestimoNaoEncontrado(EmprestimoNaoEncontradoException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(404, ex.getMessage()));
+    public ResponseEntity<String> handlerEmprestimoNaoEncontrado(RuntimeException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(Exception.class)

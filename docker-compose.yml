@@ -4,8 +4,10 @@ services:
     image: 'mysql:latest'
     environment:
       - 'MYSQL_DATABASE=meu_acervo'
-      - 'MYSQL_PASSWORD=ASenha'
       - 'MYSQL_ROOT_PASSWORD=root'
-      - 'MYSQL_USER=user'
+      - 'MYSQL_USER=root'
+      - 'MYSQL_ROOT_PASSWORD=rootsenha'
     ports:
       - '3306:3306'
+    volumes:
+      - ./mysql_data:/var/lib/mysql

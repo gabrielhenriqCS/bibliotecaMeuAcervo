@@ -2,7 +2,6 @@ package com.meuacervo.meu_acervo.controller;
 
 import com.meuacervo.meu_acervo.DTOs.CreateLivroDTO;
 import com.meuacervo.meu_acervo.DTOs.UpdateLivroDTO;
-import com.meuacervo.meu_acervo.exception.LivroNaoEncontradoException;
 import com.meuacervo.meu_acervo.model.Livro;
 import com.meuacervo.meu_acervo.service.LivroService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,31 +19,31 @@ public class LivroController {
 
     @GetMapping
     public ResponseEntity<List<Livro>> getAllLivros() {
-        var listLivros = livroService.listLivros();
+        var listLivros = livroService.listarLivros();
         return ResponseEntity.ok(listLivros);
     }
 
     @GetMapping("/{isbn}")
     public ResponseEntity<Livro> getLivroById(@PathVariable("isbn") String isbn) {
-        return livroService.findLivroByIsbn(isbn).map(ResponseEntity::ok).orElseThrow(() -> new LivroNaoEncontradoException("ISBN " + isbn + " não encontrado"));
+        return ResponseEntity.ok(livroService.buscarLivroPeloIsbn(isbn));
     }
 
     @PostMapping
     public ResponseEntity<Livro> createLivro(@RequestBody CreateLivroDTO createLivroDTO) {
-        var livroId = livroService.createLivro(createLivroDTO);
+        var livroId = livroService.cadastrarLivro(createLivroDTO);
         return ResponseEntity.created(URI.create("/api/v1/livros/" + livroId)).build();
     }
 
     @PutMapping("/{isbn}")
     public ResponseEntity<Void> updateLivroById(@PathVariable("isbn") String isbn, @RequestBody UpdateLivroDTO updateLivroDTO) {
-        livroService.updateLivroByIsbn(isbn, updateLivroDTO);
+        livroService.atualizarLivroPeloIsbn(isbn, updateLivroDTO);
         return ResponseEntity.noContent().build();
     }
 
 
     @DeleteMapping("/{isbn}")
     public ResponseEntity<Void> deleteLivro(@PathVariable("isbn") String isbn) {
-        livroService.deleteById(isbn);
+        livroService.deletarPeloId(isbn);
         return ResponseEntity.noContent().build();
     }
 }

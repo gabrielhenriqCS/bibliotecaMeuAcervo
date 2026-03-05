@@ -1,11 +1,14 @@
 package com.meuacervo.meu_acervo.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
-
+@Getter
+@Setter
 @Entity
 @Table(name = "aluno")
 public class Aluno {
@@ -32,55 +35,8 @@ public class Aluno {
     @UpdateTimestamp
     private Instant updateTimestamp;
 
-    public Aluno(Long ra, String nome, String email, Long telefone, Emprestimo emprestimoId, Instant creationTimestamp, Instant updateTimestamp) {
-        this.ra = ra;
-        this.nome = nome;
-        this.email = email;
-        this.telefone = telefone;
-        this.emprestimoId = emprestimoId;
-    }
-
     public Aluno() {
 
     }
 
-    public Long getRa() {
-        return ra;
-    }
-
-    public void setRa(Long ra) {
-        this.ra = ra;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Long getTelefone() {
-        return telefone;
-    }
-
-    public void setTelefone(Long telefone) {
-        this.telefone = telefone;
-    }
-
-    public Emprestimo getEmprestimoId() {
-        return emprestimoId;
-    }
-
-    public void setEmprestimoId(Emprestimo emprestimoId) {
-        this.emprestimoId = emprestimoId;
-    }
 }

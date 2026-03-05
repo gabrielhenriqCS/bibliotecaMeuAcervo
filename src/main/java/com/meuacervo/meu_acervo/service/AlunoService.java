@@ -2,6 +2,7 @@ package com.meuacervo.meu_acervo.service;
 
 import com.meuacervo.meu_acervo.DTOs.CreateAlunoDTO;
 import com.meuacervo.meu_acervo.DTOs.UpdateAlunoDTO;
+import com.meuacervo.meu_acervo.exception.AlunoNaoEncontradoException;
 import com.meuacervo.meu_acervo.exception.EmprestimoNaoEncontradoException;
 import com.meuacervo.meu_acervo.model.Aluno;
 import com.meuacervo.meu_acervo.repository.AlunoRepository;
@@ -9,9 +10,9 @@ import com.meuacervo.meu_acervo.repository.EmprestimoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
+
 import java.util.List;
-import java.util.Optional;
+
 
 
 @Service
@@ -21,7 +22,7 @@ public class AlunoService {
     @Autowired
     private AlunoRepository alunoRepository;
 
-    public Long createAluno(CreateAlunoDTO dto) {
+    public Long cadastrarAluno(CreateAlunoDTO dto) {
         var entity = new Aluno();
         entity.setRa(dto.ra());
         entity.setNome(dto.nome());
@@ -33,11 +34,11 @@ public class AlunoService {
             entity.setEmprestimoId(emprestimoRegister);
         }
 
-        var alunoSaved = alunoRepository.save(entity);
-        return alunoSaved.getRa();
+        var alunoSalvo = alunoRepository.save(entity);
+        return alunoSalvo.getRa();
     }
 
-    public void updateAlunoByRa(Long ra, UpdateAlunoDTO updateAlunoDTO) {
+    public void atualizarAlunoPeloRa(Long ra, UpdateAlunoDTO updateAlunoDTO) {
         var alunoEntity = alunoRepository.findById(ra);
         if (alunoEntity.isPresent()) {
             var aluno = alunoEntity.get();
@@ -51,15 +52,15 @@ public class AlunoService {
         }
     }
 
-    public Optional<Aluno> findAlunoByRa(Long ra) {
-        return alunoRepository.findById(ra);
+    public Aluno buscarAlunoPeloRa(Long ra) {
+        return alunoRepository.findById(ra).orElseThrow(() -> new AlunoNaoEncontradoException("Aluno do RA " + ra + " não encontrado."));
     }
 
-    public List<Aluno> findAlunos() {
+    public List<Aluno> buscarAlunos() {
         return alunoRepository.findAll();
     }
 
-    public void deleteByRa(Long ra) {
+    public void deletarPorRa(Long ra) {
         alunoRepository.deleteById(ra);
     }
 }

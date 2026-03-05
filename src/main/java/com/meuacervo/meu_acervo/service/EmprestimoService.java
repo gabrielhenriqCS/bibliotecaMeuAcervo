@@ -2,6 +2,7 @@ package com.meuacervo.meu_acervo.service;
 
 import com.meuacervo.meu_acervo.DTOs.CreateEmprestimoDTO;
 import com.meuacervo.meu_acervo.exception.ColaboradorNaoEncontradoException;
+import com.meuacervo.meu_acervo.exception.EmprestimoNaoEncontradoException;
 import com.meuacervo.meu_acervo.exception.LivroNaoEncontradoException;
 import com.meuacervo.meu_acervo.model.Emprestimo;
 import com.meuacervo.meu_acervo.repository.ColaboradorRepository;
@@ -10,9 +11,7 @@ import com.meuacervo.meu_acervo.repository.LivroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class EmprestimoService {
@@ -23,7 +22,7 @@ public class EmprestimoService {
     @Autowired
     private EmprestimoRepository emprestimoRepository;
 
-    public Integer createEmprestimo(CreateEmprestimoDTO dto) {
+    public Integer cadastrarEmprestimo(CreateEmprestimoDTO dto) {
         var entity = new Emprestimo();
         entity.setDataEmprestimo(dto.dataEmprestimo());
         entity.setDataDevolucao(dto.dataDevolucao());
@@ -37,21 +36,21 @@ public class EmprestimoService {
             var livroIsbn = livroRepository.findById(dto.livroIsbn()).orElseThrow(() -> new LivroNaoEncontradoException("ISBN do livro não foi encontrado"));
             entity.setLivro(livroIsbn);
         }
-        var emprestimoSaved = emprestimoRepository.save(entity);
-        return emprestimoSaved.getId();
+        var emprestimoSalvo = emprestimoRepository.save(entity);
+        return emprestimoSalvo.getId();
     }
 
-    public Optional<Emprestimo> findEmprestimoById(Integer id) {
-        return emprestimoRepository.findById(id);
+    public Emprestimo buscarEmprestimoPeloId(Integer id) {
+        return emprestimoRepository.findById(id).orElseThrow(() -> new EmprestimoNaoEncontradoException("Empréstimo " + id + " não encontrado."));
     }
 
-    public List<Emprestimo> listEmprestimos() {
+    public List<Emprestimo> listarEmprestimos() {
         return emprestimoRepository.findAll();
     }
 
-    public void deleteById(Integer id) {
-        var emprestimoExists = emprestimoRepository.existsById(id);
-        if (emprestimoExists) {
+    public void deletarPeloId(Integer id) {
+        var emprestimoExiste = emprestimoRepository.existsById(id);
+        if (emprestimoExiste) {
             emprestimoRepository.deleteById(id);
         }
     }
